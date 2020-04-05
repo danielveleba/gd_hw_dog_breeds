@@ -40,15 +40,18 @@ class ParallelBreedsApi
 
   def process_results(results)
     res = {}
+
     results.each do |breed, task|
       # if `task.result.status` raises an exception for any reason, it's a bug
       # in the script. thus not handled
       case task.result.status
       when 200
-        res[breed] = task.result.body
+        res[breed] = task.result.body['message']
       else
-        pp "API returned non-200 status for breed #{breed}: #{task.result}" # TODO log warn
+        pp "API returned non-200 status for breed #{breed}: #{task.result.inspect}" # TODO log warn
       end
     end
+
+    res
   end
 end

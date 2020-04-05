@@ -9,6 +9,7 @@ GEM
     faraday_middleware (1.0.0)
       faraday (~> 1.0)
     multipart-post (2.1.1)
+    oj (3.10.6)
     rspec (3.9.0)
       rspec-core (~> 3.9.0)
       rspec-expectations (~> 3.9.0)
@@ -32,6 +33,7 @@ DEPENDENCIES
   connection_pool (~> 2.2, >= 2.2.2)
   faraday (~> 1.0, >= 1.0.1)
   faraday_middleware (~> 1.0)
+  oj (~> 3.10)
   rspec (~> 3.9)
   thread (~> 0.2.2)
 
