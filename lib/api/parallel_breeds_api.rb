@@ -7,11 +7,14 @@ require 'thread/pool'
 require_relative 'breeds_api'
 
 # Provides parallel calling of the BreedsApi
-# Aside from thread pool sets also connection pool to allow for HTTP connection reusing
+# Aside from thread pool sets also connection pool
+# to allow for HTTP connection reusing
 class ParallelBreedsApi
   # @param timeout How long to wait to get a thread from the pool
   def initialize(num_threads = 5, timeout = 60)
-    @conn_pool = ConnectionPool.new(size: num_threads, timeout: timeout) { BreedsApi.new }
+    @conn_pool = ConnectionPool.new(size: num_threads, timeout: timeout) do
+      BreedsApi.new
+    end
     @thread_pool = Thread.pool(num_threads)
   end
 

@@ -5,7 +5,8 @@ require 'oj'
 
 # Persistence for the data fetched from the API
 # Stores data in CSV files plus timestamps in a separate JSON
-# All output is stored in a timestamped directory to minimize chances of overwriting existing files
+# All output is stored in a timestamped directory to minimize chances
+# of overwriting existing files
 class BreedsStorage
   OUT_DIR = "out-#{Time.now.strftime('%F_%H-%M-%S-%L')}"
   JSON_LOG_FILE = "#{OUT_DIR}/updated_at.json"
@@ -25,11 +26,14 @@ class BreedsStorage
     log_time(json)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def self.save_to_csv(breed, data)
     breed = sanitize_input(breed)
 
     fname = "#{OUT_DIR}/#{breed}.csv"
-    Main.logger.warn "File #{fname} already exists, will be overwritten" if File.exist?(fname)
+    if File.exist?(fname)
+      Main.logger.warn "File #{fname} already exists, will be overwritten"
+    end
 
     CSV.open(fname, 'w') do |csv|
       csv << HEADER
@@ -39,9 +43,12 @@ class BreedsStorage
     end
     fname
   end
+  # rubocop:enable Metrics/MethodLength
 
   def self.log_time(json)
-    Main.logger.warn "File #{JSON_LOG_FILE} already exists, will be overwritten" if File.exist?(JSON_LOG_FILE)
+    if File.exist?(JSON_LOG_FILE)
+      Main.logger.warn "File #{JSON_LOG_FILE} exists, will be overwritten"
+    end
 
     File.open(JSON_LOG_FILE, 'w') do |f|
       f.write(json)
