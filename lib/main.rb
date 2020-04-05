@@ -12,11 +12,11 @@ class Main
   end
 
   def self.ret
-    @@ret
+    @ret ||= 0
   end
 
   def self.ret=(val)
-    @@ret = val # rubocop:disable Style/ClassVars
+    @ret = val
   end
 
   def self.run(breed_names)
