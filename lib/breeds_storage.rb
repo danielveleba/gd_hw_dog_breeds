@@ -2,12 +2,12 @@ require 'csv'
 require 'oj'
 
 class BreedsStorage
-  OUT_DIR = 'out'.freeze
+  OUT_DIR = "out-#{Time.now.strftime('%F_%H-%M-%S-%L')}".freeze
   JSON_LOG_FILE = "#{OUT_DIR}/updated_at.json".freeze
   HEADER = %w[breed link].freeze
 
   def self.save(breeds)
-    Dir.mkdir(OUT_DIR) unless Dir.exist?(OUT_DIR)
+    Dir.mkdir(OUT_DIR)
 
     times = {}
     breeds.each do |breed, data|
@@ -26,7 +26,10 @@ class BreedsStorage
     breed = sanitize_input(breed)
 
     fname = "#{OUT_DIR}/#{breed}.csv"
-    # not really happy about the overwriting here, more in the email
+    if File.exist?(fname)
+      $logger.warn "File #{fname} already exists, will be overwritten"
+    end
+
     CSV.open(fname, 'w') do |csv|
       csv << HEADER
       data.each do |line|
@@ -39,6 +42,10 @@ class BreedsStorage
   protected
 
   def self.log_time(json)
+    if File.exist?(JSON_LOG_FILE)
+      $logger.warn "File #{JSON_LOG_FILE} already exists, will be overwritten"
+    end
+
     File.open(JSON_LOG_FILE, 'w') do |f|
       f.write(json)
     end
