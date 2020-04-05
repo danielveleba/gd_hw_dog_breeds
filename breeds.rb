@@ -3,6 +3,8 @@
 require 'pp' # TODO drop
 require 'cli'
 
+require_relative 'lib/api/breeds_api'
+
 opts = CLI.new do
   description 'Fetches dog breed image links from dog API. See Readme.md for more.'
   version '0.0.1'
@@ -17,4 +19,7 @@ breed_names = opts.breeds.map do |breed_name|
 end.reject!(&:empty?)
 
 breeds_from_api = BreedsApi.fetch_breeds(breed_names)
-BreedsStorage.save(breeds_from_api)
+
+pp breeds_from_api
+
+# BreedsStorage.save(breeds_from_api)
