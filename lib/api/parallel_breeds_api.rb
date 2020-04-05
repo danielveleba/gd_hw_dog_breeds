@@ -43,13 +43,17 @@ class ParallelBreedsApi
     res = {}
 
     results.each do |breed, task|
-      # if `task.result.status` raises an exception for any reason, it's a bug
-      # in the script. thus not handled
-      case task.result.status
-      when 200
-        res[breed] = task.result.body['message']
+      if task.exception
+        $logger.error "Feching data for breed #{breed} raised exception: #{task.exception}"
       else
-        $logger.warn "API returned non-200 status for breed #{breed}: #{task.result.inspect}"
+        # if `task.result.status` raises an exception for any reason, it's a bug
+        # in the script. thus not handled
+        case task.result.status
+        when 200
+          res[breed] = task.result.body['message']
+        else
+          $logger.warn "API returned non-200 status for breed #{breed}: #{task.result.inspect}"
+        end
       end
     end
 

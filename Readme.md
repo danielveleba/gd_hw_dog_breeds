@@ -55,3 +55,4 @@ all the files.
     to the API 
   * logging - file / stdout
   * file overwriting
+  * file creation date - shouldn't have taken the file attribute?

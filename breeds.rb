@@ -16,8 +16,7 @@ opts = CLI.new do
 end.parse!
 
 breed_names = opts.breeds.map do |breed_name|
-  breed_name.tr(',', '')
-  # TODO URL sanitation
+  breed_name.tr(',./ ', '')
 end.uniq.reject!(&:empty?)
 
 api = ParallelBreedsApi.new

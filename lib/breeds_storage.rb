@@ -13,7 +13,7 @@ class BreedsStorage
     breeds.each do |breed, data|
       fname = save_to_csv(breed, data)
       fname = File.basename(fname)
-      times[fname] = Time.now.utc # TODO what creation date should have been used?
+      times[fname] = Time.now.utc
     end
 
     json = Oj.dump(times, mode: :json)
