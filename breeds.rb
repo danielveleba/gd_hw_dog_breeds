@@ -5,6 +5,13 @@ require 'cli'
 
 require_relative 'lib/api/breeds_api'
 
+def sanitize_input(opts)
+  opts.breeds.map do |breed_name|
+    breed_name.tr(',', '')
+    # TODO URL sanitization
+  end.uniq.reject!(&:empty?)
+end
+
 opts = CLI.new do
   description 'Fetches dog breed image links from dog API. See Readme.md for more.'
   version '0.0.1'
@@ -13,13 +20,12 @@ end.parse!
 
 pp opts.breeds # TODO drop
 
-breed_names = opts.breeds.map do |breed_name|
-  breed_name.tr(',','')
-  # TODO URL sanitization
-end.reject!(&:empty?)
+breed_names = sanitize_input(opts)
+
+pp breed_names # TODO drop
 
 breeds_from_api = BreedsApi.fetch_breeds(breed_names)
 
-pp breeds_from_api
+pp breeds_from_api # TODO drop
 
 # BreedsStorage.save(breeds_from_api)
