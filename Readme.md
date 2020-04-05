@@ -15,7 +15,7 @@ Sub-breeds are specified as a dash-separated suffix to the breed, like `bulldog-
 
 ## Description
 
-Fetches links to photos of given dog breeds, each in a separate thread (TODO or fibre?).
+Fetches links to photos of given dog breeds, each in a separate thread.
  Downloaded data are stored in the `out` directory together. There are two kinds of files:
 
 ### CSV files
