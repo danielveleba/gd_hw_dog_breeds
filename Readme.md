@@ -11,6 +11,8 @@ Fetches info about given dog breeds from [Dog API](https://dog.ceo/dog-api/).
 Some dog breeds have sub-breed, like `boston bulldog`. The sub-breed may or may not be specified. 
 If specified, data for the sub-breed are fetched. If not, data for ALL sub-breeds are fetched.
 
+Sub-breeds are specified as a dash-separated suffix to the breed, like `bulldog-boston`.
+
 ## Description
 
 Fetches links to photos of given dog breeds, each in a separate thread (TODO or fibre?).
