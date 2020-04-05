@@ -1,15 +1,20 @@
+# frozen_string_literal: true
+
 require 'logger'
 require 'connection_pool'
 require 'thread/pool'
 
 require_relative 'breeds_api'
 
+# Provides parallel calling of the BreedsApi
+# Aside from thread pool sets also connection pool to allow for HTTP connection reusing
 class ParallelBreedsApi
   def initialize(num_threads = 5, timeout = 60)
     @conn_pool = ConnectionPool.new(size: num_threads, timeout: timeout) { BreedsApi.new }
     @thread_pool = Thread.pool(num_threads)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def fetch_breeds(breed_names)
     breed_names = sanitize_input(breed_names)
 
@@ -29,6 +34,7 @@ class ParallelBreedsApi
 
     process_results(res)
   end
+  # rubocop:enable Metrics/MethodLength
 
   protected
 
@@ -39,12 +45,14 @@ class ParallelBreedsApi
     breed_names.uniq
   end
 
+  # rubocop:disable Metrics/MethodLength
   def process_results(results)
     res = {}
 
     results.each do |breed, task|
       if task.exception
-        $logger.error "Feching data for breed #{breed} raised exception: #{task.exception}"
+        $logger.error "Fetching data for breed #{breed} raised exception: "\
+        "#{task.exception}"
       else
         # if `task.result.status` raises an exception for any reason, it's a bug
         # in the script. thus not handled
@@ -52,11 +60,13 @@ class ParallelBreedsApi
         when 200
           res[breed] = task.result.body['message']
         else
-          $logger.warn "API returned non-200 status for breed #{breed}: #{task.result.inspect}"
+          $logger.warn 'API returned non-200 status for breed'\
+          " #{breed}: #{task.result.inspect}"
         end
       end
     end
 
     res
   end
+  # rubocop:enable Metrics/MethodLength
 end

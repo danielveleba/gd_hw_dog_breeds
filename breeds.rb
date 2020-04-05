@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'logger'
 require 'cli'
@@ -10,11 +11,13 @@ $logger = Logger.new(STDOUT)
 $logger.level = Logger::INFO
 
 opts = CLI.new do
-  description 'Fetches dog breed image links from dog API. See Readme.md for more.'
+  description 'Fetches dog breed image links from dog API. See Readme for more.'
   version '0.0.1'
-  arguments :breeds, description: 'Comma separated list of breeds. Sub-breeds follow separated by a dash, eg. bulldog-boston'
+  arguments :breeds, description:
+      'Comma separated list of breeds. Sub-breeds follow separated by a dash, eg. bulldog-boston'
 end.parse!
 
+# noinspection RubyResolve
 breed_names = opts.breeds.map do |breed_name|
   breed_name.tr(',./ ', '')
 end.uniq.reject!(&:empty?)
