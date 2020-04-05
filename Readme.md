@@ -59,3 +59,5 @@ all the files.
   * file overwriting
   * file creation date - shouldn't have taken the file attribute?
   * it would be sexier to have sub-breed in CSV even if only master breed was specified
+  * RuboCop exceptions
+  * document param formats

@@ -9,6 +9,7 @@ require_relative 'breeds_api'
 # Provides parallel calling of the BreedsApi
 # Aside from thread pool sets also connection pool to allow for HTTP connection reusing
 class ParallelBreedsApi
+  # @param timeout How long to wait to get a thread from the pool
   def initialize(num_threads = 5, timeout = 60)
     @conn_pool = ConnectionPool.new(size: num_threads, timeout: timeout) { BreedsApi.new }
     @thread_pool = Thread.pool(num_threads)
@@ -53,6 +54,7 @@ class ParallelBreedsApi
       if task.exception
         $logger.error "Fetching data for breed #{breed} raised exception: "\
         "#{task.exception}"
+        $ret = -1
       else
         # if `task.result.status` raises an exception for any reason, it's a bug
         # in the script. thus not handled
@@ -62,6 +64,7 @@ class ParallelBreedsApi
         else
           $logger.warn 'API returned non-200 status for breed'\
           " #{breed}: #{task.result.inspect}"
+          $ret = -1
         end
       end
     end

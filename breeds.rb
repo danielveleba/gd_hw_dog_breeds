@@ -7,6 +7,8 @@ require 'cli'
 require_relative 'lib/api/parallel_breeds_api'
 require_relative 'lib/breeds_storage'
 
+$ret = 0
+
 $logger = Logger.new(STDOUT)
 $logger.level = Logger::INFO
 
@@ -22,7 +24,9 @@ breed_names = opts.breeds.map do |breed_name|
   breed_name.tr(',./ ', '')
 end.uniq.reject!(&:empty?)
 
-api = ParallelBreedsApi.new
+api = ParallelBreedsApi.new(5, 60)
 breeds_from_api = api.fetch_breeds(breed_names)
 
 BreedsStorage.save(breeds_from_api)
+
+exit($ret)
