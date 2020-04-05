@@ -3,7 +3,7 @@
 require 'pp' # TODO drop
 require 'cli'
 
-require_relative 'lib/api/breeds_api'
+require_relative 'lib/api/parallel_breeds_api'
 
 def sanitize_input(opts)
   opts.breeds.map do |breed_name|
@@ -24,8 +24,9 @@ breed_names = sanitize_input(opts)
 
 pp breed_names # TODO drop
 
-breeds_from_api = BreedsApi.fetch_breeds(breed_names)
+api = ParallelBreedsApi.new
+breeds_from_api = api.fetch_breeds(breed_names)
 
 pp breeds_from_api # TODO drop
 
-# BreedsStorage.save(breeds_from_api)
+BreedsStorage.save(breeds_from_api)
