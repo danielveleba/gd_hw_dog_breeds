@@ -1,3 +1,4 @@
+require 'logger'
 require 'connection_pool'
 require 'thread/pool'
 
@@ -48,7 +49,7 @@ class ParallelBreedsApi
       when 200
         res[breed] = task.result.body['message']
       else
-        pp "API returned non-200 status for breed #{breed}: #{task.result.inspect}" # TODO log warn
+        $logger.warn "API returned non-200 status for breed #{breed}: #{task.result.inspect}"
       end
     end
 
