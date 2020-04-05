@@ -29,7 +29,7 @@ class BreedsStorage
     breed = sanitize_input(breed)
 
     fname = "#{OUT_DIR}/#{breed}.csv"
-    $logger.warn "File #{fname} already exists, will be overwritten" if File.exist?(fname)
+    Main.logger.warn "File #{fname} already exists, will be overwritten" if File.exist?(fname)
 
     CSV.open(fname, 'w') do |csv|
       csv << HEADER
@@ -41,7 +41,7 @@ class BreedsStorage
   end
 
   def self.log_time(json)
-    $logger.warn "File #{JSON_LOG_FILE} already exists, will be overwritten" if File.exist?(JSON_LOG_FILE)
+    Main.logger.warn "File #{JSON_LOG_FILE} already exists, will be overwritten" if File.exist?(JSON_LOG_FILE)
 
     File.open(JSON_LOG_FILE, 'w') do |f|
       f.write(json)

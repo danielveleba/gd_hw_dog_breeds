@@ -7,10 +7,44 @@ require 'cli'
 require_relative 'lib/api/parallel_breeds_api'
 require_relative 'lib/breeds_storage'
 
-$ret = 0
+# Main entrypoint
+# Also wraps logger and script return value for a use deeper down the road
+class Main
+  def self.logger
+    init_logger unless @logger
+    @logger
+  end
 
-$logger = Logger.new(STDOUT)
-$logger.level = Logger::INFO
+  def self.ret
+    @@ret
+  end
+
+  def self.ret=(val)
+    @@ret = val # rubocop:disable Style/ClassVars
+  end
+
+  def self.run(breed_names)
+    breed_names = sanitize_input(breed_names)
+
+    api = ParallelBreedsApi.new(5, 60)
+    breeds_from_api = api.fetch_breeds(breed_names)
+
+    BreedsStorage.save(breeds_from_api)
+  end
+
+  def self.sanitize_input(breed_names)
+    breed_names.map do |breed_name|
+      breed_name.tr(',./ ', '')
+    end.uniq.reject(&:empty?)
+  end
+
+  def self.init_logger
+    @logger = Logger.new(STDOUT)
+    @logger.level = Logger::INFO
+  end
+
+  private_class_method :sanitize_input, :init_logger
+end
 
 opts = CLI.new do
   description 'Fetches dog breed image links from dog API. See Readme for more.'
@@ -20,13 +54,6 @@ opts = CLI.new do
 end.parse!
 
 # noinspection RubyResolve
-breed_names = opts.breeds.map do |breed_name|
-  breed_name.tr(',./ ', '')
-end.uniq.reject!(&:empty?)
+Main.run(opts.breeds)
 
-api = ParallelBreedsApi.new(5, 60)
-breeds_from_api = api.fetch_breeds(breed_names)
-
-BreedsStorage.save(breeds_from_api)
-
-exit($ret)
+exit(Main.ret)

@@ -52,9 +52,9 @@ class ParallelBreedsApi
 
     results.each do |breed, task|
       if task.exception
-        $logger.error "Fetching data for breed #{breed} raised exception: "\
+        Main.logger.error "Fetching data for breed #{breed} raised exception: "\
         "#{task.exception}"
-        $ret = -1
+        Main.ret = -1
       else
         # if `task.result.status` raises an exception for any reason, it's a bug
         # in the script. thus not handled
@@ -62,9 +62,9 @@ class ParallelBreedsApi
         when 200
           res[breed] = task.result.body['message']
         else
-          $logger.warn 'API returned non-200 status for breed'\
+          Main.logger.warn 'API returned non-200 status for breed'\
           " #{breed}: #{task.result.inspect}"
-          $ret = -1
+          Main.ret = -1
         end
       end
     end
