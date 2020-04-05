@@ -54,3 +54,4 @@ all the files.
     * I might add similarity search for human (using eg. Levenshtein distance), though it would be a nicer fit to add it 
     to the API 
   * logging - file / stdout
+  * file overwriting

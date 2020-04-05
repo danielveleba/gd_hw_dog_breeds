@@ -10,21 +10,45 @@ class ParallelBreedsApi
   end
 
   def fetch_breeds(breed_names)
-    breed_names.map do |breed|
-      breed.tr!('-', '/')
-    end
+    breed_names = sanitize_input(breed_names)
 
-    res = []
+    # nb: the map won't suffice if there are duplicate breeds;
+    # thus the `uniq` in input sanitation
+    res = {}
     breed_names.each do |breed_name|
-      res << @thread_pool.process do
+      tmp = @thread_pool.process do
         # @conn_pool.with do |breeds_api|
-        BreedsApi.new.call_breeds_api(breed_name) # TODO handle failures
+        BreedsApi.new.call_breeds_api(breed_name)
         # end
       end
+      res[breed_name] = tmp
     end
 
     @thread_pool.wait(:done)
 
-    res
+    process_results(res)
+  end
+
+  protected
+
+  def sanitize_input(breed_names)
+    breed_names.map do |breed|
+      breed.tr!('-', '/')
+    end
+    breed_names.uniq
+  end
+
+  def process_results(results)
+    res = {}
+    results.each do |breed, task|
+      # if `task.result.status` raises an exception for any reason, it's a bug
+      # in the script. thus not handled
+      case task.result.status
+      when 200
+        res[breed] = task.result.body
+      else
+        pp "API returned non-200 status for breed #{breed}: #{task.result}" # TODO log warn
+      end
+    end
   end
 end

@@ -4,6 +4,7 @@ require 'pp' # TODO drop
 require 'cli'
 
 require_relative 'lib/api/parallel_breeds_api'
+require_relative 'lib/breeds_storage'
 
 def sanitize_input(opts)
   opts.breeds.map do |breed_name|

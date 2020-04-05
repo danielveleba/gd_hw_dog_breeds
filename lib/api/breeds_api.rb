@@ -10,8 +10,7 @@ class BreedsApi
   end
 
   def call_breeds_api(breed)
-    res = @faraday.get(DOG_API_PATH % {breed: breed})
-    pp res.body
+    @faraday.get(DOG_API_PATH % {breed: breed})
   end
 
   protected
