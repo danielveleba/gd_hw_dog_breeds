@@ -18,6 +18,8 @@ class ParallelBreedsApi
     @thread_pool = Thread.pool(num_threads)
   end
 
+  # I can't help it but it looks more readable this long
+  # (w/o extracting the middle out)
   # rubocop:disable Metrics/MethodLength
   def fetch_breeds(breed_names)
     breed_names = sanitize_input(breed_names)
@@ -49,6 +51,7 @@ class ParallelBreedsApi
     breed_names.uniq
   end
 
+  # Again, shortening the method doesn't help readability
   # rubocop:disable Metrics/MethodLength
   def process_results(results)
     res = {}
