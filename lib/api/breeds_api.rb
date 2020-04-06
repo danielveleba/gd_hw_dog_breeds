@@ -13,7 +13,7 @@ class BreedsApi
     @faraday = init_http_client
   end
 
-  def call_breeds_api(breed)
+  def fetch_breed(breed)
     @faraday.get(DOG_API_PATH % breed)
   end
 

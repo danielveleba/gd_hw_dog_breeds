@@ -12,6 +12,7 @@ class BreedsStorage
   JSON_LOG_FILE = "#{OUT_DIR}/updated_at.json"
   HEADER = %w[breed link].freeze
 
+  # @param breeds[Hash] Hash where keys are names of breeds and values are breed data
   def self.save(breeds)
     Dir.mkdir(OUT_DIR)
 
@@ -26,6 +27,8 @@ class BreedsStorage
     log_time(json)
   end
 
+  # @param breed[String] Name of breed
+  # @param data[Array] Array of all images for the given breed
   # rubocop:disable Metrics/MethodLength
   def self.save_to_csv(breed, data)
     breed = sanitize_input(breed)

@@ -30,7 +30,7 @@ class ParallelBreedsApi
     breed_names.each do |breed_name|
       tmp = @thread_pool.process do
         @conn_pool.with do |breeds_api|
-          breeds_api.call_breeds_api(breed_name)
+          breeds_api.fetch_breed(breed_name)
         end
       end
       res[breed_name] = tmp
@@ -52,6 +52,7 @@ class ParallelBreedsApi
     breed_names.uniq
   end
 
+  # @return [Hash] Hash where keys are names of breeds and values are breed data
   # Again, shortening the method doesn't help readability
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
