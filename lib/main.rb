@@ -15,8 +15,8 @@ class Main
     @ret ||= 0
   end
 
-  def self.ret=(val)
-    @ret = val
+  class << self
+    attr_writer :ret
   end
 
   def self.run(breed_names)

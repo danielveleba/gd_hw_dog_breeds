@@ -18,7 +18,7 @@ class ParallelBreedsApi
     @thread_pool = Thread.pool(num_threads)
   end
 
-  # I can't help it but it looks more readable this long
+  # I can't help it but it's more readable this long
   # (w/o extracting the middle out)
   # rubocop:disable Metrics/MethodLength
   def fetch_breeds(breed_names)
@@ -40,6 +40,7 @@ class ParallelBreedsApi
 
     process_results(res)
   end
+
   # rubocop:enable Metrics/MethodLength
 
   protected
@@ -53,6 +54,7 @@ class ParallelBreedsApi
 
   # Again, shortening the method doesn't help readability
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def process_results(results)
     res = {}
 
@@ -61,21 +63,19 @@ class ParallelBreedsApi
         Main.logger.error "Fetching data for breed #{breed} raised exception: "\
         "#{task.exception}"
         Main.ret = -1
+      elsif task.result.status == 200 && task.result.body['status'] == 'success'
+        res[breed] = task.result.body['message']
       else
         # if `task.result.status` raises an exception for any reason, it's a bug
         # in the script. thus not handled
-        case task.result.status
-        when 200
-          res[breed] = task.result.body['message']
-        else
-          Main.logger.warn 'API returned non-200 status for breed'\
+        Main.logger.warn 'API returned non-200 status for breed'\
           " #{breed}: #{task.result.inspect}"
-          Main.ret = -1
-        end
+        Main.ret = -1
       end
     end
 
     res
   end
+  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 end
