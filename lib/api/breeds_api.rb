@@ -20,8 +20,8 @@ class BreedsApi
   protected
 
   def init_http_client
-    Faraday.new(url: DOG_API_ROOT) do |f|
-      f.request :json
+    Faraday.new(url: DOG_API_ROOT,
+                headers: { 'Content-Type' => 'application/json' }) do |f|
 
       f.response :json, content_type: /\bjson$/
     end
