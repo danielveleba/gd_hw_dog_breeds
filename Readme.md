@@ -42,7 +42,7 @@ Kill the script, no need to restart it. Please inform the owner at my@email.com 
 
 ### Running out of disk space
 
-All output is stored in `out` directory. The script only downloads links to the images, NOT the images themselves, 
+All output is stored in `out*` directories. The script only downloads links to the images, NOT the images themselves, 
 so the data shouldn't consume any considerable amount of disk space. If that's the case though, feel free delete 
 all the files. 
 
